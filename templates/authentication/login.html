@@ -1,0 +1,59 @@
+{% extends 'base_auth.html' %}
+{% load static %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <div class="card mt-5">
+                <div class="card-title">
+                    <h4 class="text-center">Login</h4>
+                </div>
+
+
+                <div class="card-body">
+                    <form action="{% url 'login' %}" method="post">
+                        {% csrf_token %}
+
+                        {% include 'partials/_messages.html' %}
+                        <div class="form-group">
+                            <input
+                                    type="text"
+                                    s name="username"
+                                    id="usernameField"
+                                    placeholder="username"
+                                    class="form-control form-control-sm"
+                                    value="{{ fieldValues.username }}"
+                            >
+
+                        </div>
+                        <div class="invalid_username invalid-feedback" style="display: none"></div>
+                        <p class="text-sm-center text-success usernameSuccessOutput"></p>
+
+
+                        <div class="form-group">
+                            <input
+                                    type="password"
+                                    name="password"
+                                    id="passwordField"
+                                    placeholder="password"
+                                    class="form-control form-control-sm"
+
+                            >
+                            <small class="float-right py-1 showPasswordToggle">SHOW</small>
+                        </div>
+                        <input type="submit" value="Login" class="btn btn-block  btn-primary submit-btn">
+                    </form>
+                </div>
+                <div class="container">
+
+                    <span class="text text-info">Don't have an account?</span><a href="{% url 'register' %}">Register </a>
+                    <br>
+                    <span class="text text-info">Forgot password?</span><a href="{% url 'request-password' %}">Reset password</a>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+
+{% endblock %}

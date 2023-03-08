@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container mt-4">
+        <h5>{{ title }}</h5>
+        <div class="row">
+            <div class="{% if mode == 'add_mode' %}col-md-12{% else %}col-md-10{% endif %} ">
+                <nav aria-label="breadcrump">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            {% if flag == 'income' %}
+                                <a href="{% url 'incomes' %}"> Incomes</a>
+                            {% else %}
+                                <a href="{% url 'expenses' %}"> Expenses</a>
+                            {% endif %}
+                        </li>
+                        <li class="breadcrumb-item">
+                            {{ title }}
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+            {% if mode == 'edit_mode' %}
+                <div class="col-md-2">
+                    <a href="{% if flag == 'income' %}
+                                {% url 'delete_income' income.pk %}
+                             {% else %}
+                                {% url 'delete_expense' expense.pk %}
+                             {% endif %}" class="btn btn-danger btn-sm"> Delete </a>
+                </div>
+            {% endif %}
+        </div>
+        <div class="card">
+            <div class="card-body">
+                {% if mode == 'edit_mode' %}
+                    <form action="{% if flag == 'income' %}
+                                    {% url 'edit_income' income.pk %}
+                                   {% else %}
+                                    {% url 'edit_expense' expense.pk %}
+                                  {% endif %}" method="post">
+                {% else %}
+                    <form action="{% if flag == 'income' %}
+                                    {% url 'add_income'%}
+                                   {% else %}
+                                    {% url 'add_expense'%}
+                                  {% endif %}" method="post">
+                {% endif %}
+                {% csrf_token %}
+                {% include 'partials/_messages.html' %}
+                <div class="form-group">
+                    <label for="">Amount</label>
+                    <input type="number" class="form-control form-control-sm" name="amount"
+                           value="{{ values.amount }}">
+                </div>
+                <div class="form-group">
+                    <label for="">Description</label>
+                    <input type="text" class="form-control form-control-sm" name="description"
+                           value="{{ values.description }}">
+                </div>
+                <div class="form-group">
+                    <label for="">{% if flag == 'income' %}Source{% else %}Category{% endif %}</label>
+                    <select class="form-control" name="{% if flag == 'income' %}source{% else %}category{% endif %}" id="">
+                        {% if flag == 'income' %}
+                            {% for source in sources %}
+                                {% if source.name == values.category %}
+                                    <option name="source" value="{{ source.name }}" selected>{{ source.name }}</option>
+                                {% else %}
+                                    <option name="source" value="{{ source.name }}">{{ source.name }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            {% for cat in categories %}
+                                {% if cat.name == values.category %}
+                                    <option name="category" value="{{ cat }}" selected>{{ cat }}</option>
+                                {% else %}
+                                    <option name="category" value="{{ cat }}">{{ cat }}</option>
+                                {% endif %}
+
+                            {% endfor %}
+                        {% endif %}
+
+
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="">{% if flag == 'income' %} Date of income {% else %} Date of expense {% endif %}</label>
+                    <input type="date" class="form-control form-control-sm" name="{% if flag == 'income' %}income_date{% else %}expense_date{% endif %}"
+                           value="{{ values.date|date:'Y-m-d' }}">
+                </div>
+                <input type="submit" value="Save" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+
+
+        </form>
+    </div>
+{% endblock %}
